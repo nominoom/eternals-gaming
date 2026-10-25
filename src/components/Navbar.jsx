@@ -14,13 +14,19 @@ import {
   ShieldAlert, 
   Menu, 
   X,
-  ExternalLink
+  ExternalLink,
+  Trophy,
+  Clock,
+  Sparkles,
+  ChevronDown,
+  Layers
 } from 'lucide-react';
 
 export default function Navbar() {
   const { route, navigate, cartCount, setIsCartOpen, user, logout } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false);
 
   const navLinks = [
     { name: 'Home', path: '/', icon: Home, description: 'Return to organization home' },
@@ -119,6 +125,66 @@ export default function Navbar() {
               )}
             </button>
 
+            {/* Operational Portals Dropdown */}
+            <div className="relative hidden md:block">
+              <button
+                onClick={() => { setPortalsDropdownOpen(!portalsDropdownOpen); setUserDropdownOpen(false); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#00FFDF] border border-white/10 transition-all cursor-pointer"
+              >
+                <Layers size={14} className="text-[#00FFDF]" />
+                <span>Portals</span>
+                <ChevronDown size={13} className={`transition-transform duration-200 ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {portalsDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-[#080A0E] border border-[#00FFDF]/30 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.85)] p-2 z-50">
+                  <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#00FFDF] border-b border-white/10 mb-1">
+                    System Portals
+                  </div>
+                  <button
+                    onClick={() => { handleLinkClick('/team-dashboard'); setPortalsDropdownOpen(false); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+                  >
+                    <Sparkles size={14} className="text-[#00FFDF] shrink-0" />
+                    <div>
+                      <div className="font-heading font-bold text-white">Team Dossier Portal</div>
+                      <div className="text-[10px] text-white/50">Social accounts & follower metrics</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { handleLinkClick('/tournament-admin'); setPortalsDropdownOpen(false); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+                  >
+                    <Clock size={14} className="text-[#7F27FF] shrink-0" />
+                    <div>
+                      <div className="font-heading font-bold text-white">Tournament Arbiter Desk</div>
+                      <div className="text-[10px] text-white/50">Referee time clock & match desk</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { handleLinkClick('/tournaments-dashboard'); setPortalsDropdownOpen(false); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+                  >
+                    <Trophy size={14} className="text-[#00FFDF] shrink-0" />
+                    <div>
+                      <div className="font-heading font-bold text-white">Tournaments Player Hub</div>
+                      <div className="text-[10px] text-white/50">Championship sign-ups & check-in</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { handleLinkClick('/admin'); setPortalsDropdownOpen(false); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left border-t border-white/10 mt-1 pt-2"
+                  >
+                    <ShieldAlert size={14} className="text-[#7F27FF] shrink-0" />
+                    <div>
+                      <div className="font-heading font-bold text-[#c499ff]">Admin Command Center</div>
+                      <div className="text-[10px] text-white/50">Direct revenue & site settings</div>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Admin shortcut if logged in as Admin */}
             {user?.role === 'Admin' && (
               <button
@@ -138,7 +204,7 @@ export default function Navbar() {
             {user ? (
               <div className="relative">
                 <button
-                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  onClick={() => { setUserDropdownOpen(!userDropdownOpen); setPortalsDropdownOpen(false); }}
                   className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 transition-all text-sm"
                 >
                   <img 
@@ -152,7 +218,7 @@ export default function Navbar() {
                 </button>
 
                 {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-[#080A0E] border border-[#00FFDF]/25 rounded-xl shadow-2xl p-2 z-50">
+                  <div className="absolute right-0 mt-2 w-60 bg-[#080A0E] border border-[#00FFDF]/25 rounded-xl shadow-2xl p-2 z-50">
                     <div className="px-3 py-2 border-b border-white/10 mb-1">
                       <p className="text-sm font-semibold text-white truncate">{user.name}</p>
                       <p className="text-xs text-[#00FFDF] font-medium">{user.role} Account</p>
@@ -164,10 +230,31 @@ export default function Navbar() {
                       <User size={15} className="text-[#00FFDF]" />
                       Profile Dossier
                     </button>
+                    <button
+                      onClick={() => { handleLinkClick('/team-dashboard'); setUserDropdownOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+                    >
+                      <Sparkles size={15} className="text-[#00FFDF]" />
+                      Team Dossier & Socials
+                    </button>
+                    <button
+                      onClick={() => { handleLinkClick('/tournament-admin'); setUserDropdownOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+                    >
+                      <Clock size={15} className="text-[#7F27FF]" />
+                      Referee & Arbiter Desk
+                    </button>
+                    <button
+                      onClick={() => { handleLinkClick('/tournaments-dashboard'); setUserDropdownOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+                    >
+                      <Trophy size={15} className="text-[#00FFDF]" />
+                      Tournaments Player Hub
+                    </button>
                     {user.role === 'Admin' && (
                       <button
                         onClick={() => { handleLinkClick('/admin'); setUserDropdownOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#c499ff] hover:bg-[#7F27FF]/15 rounded-lg transition-colors text-left"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#c499ff] hover:bg-[#7F27FF]/15 rounded-lg transition-colors text-left border-t border-white/10 mt-1 pt-2"
                       >
                         <ShieldAlert size={15} />
                         Admin Dashboard
@@ -229,6 +316,44 @@ export default function Navbar() {
                   </button>
                 );
               })}
+
+              <div className="pt-3 pb-1 px-4 text-[10px] font-mono uppercase tracking-wider text-white/40 border-t border-white/10 mt-2">
+                Operational Portals
+              </div>
+              
+              <button
+                onClick={() => handleLinkClick('/team-dashboard')}
+                className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-left hover:bg-white/5 text-white/80"
+              >
+                <Sparkles size={18} className="text-[#00FFDF]" />
+                <div>
+                  <div className="text-sm font-medium">Team Dossier Portal</div>
+                  <div className="text-xs text-white/40">Athletes, socials & follower metrics</div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleLinkClick('/tournament-admin')}
+                className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-left hover:bg-white/5 text-white/80"
+              >
+                <Clock size={18} className="text-[#7F27FF]" />
+                <div>
+                  <div className="text-sm font-medium">Tournament Arbiter Desk</div>
+                  <div className="text-xs text-white/40">Referee duty time & match desk</div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleLinkClick('/tournaments-dashboard')}
+                className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-left hover:bg-white/5 text-white/80"
+              >
+                <Trophy size={18} className="text-[#00FFDF]" />
+                <div>
+                  <div className="text-sm font-medium">Tournaments Player Hub</div>
+                  <div className="text-xs text-white/40">Championship sign-ups & check-in</div>
+                </div>
+              </button>
+
               {user?.role === 'Admin' && (
                 <button
                   onClick={() => handleLinkClick('/admin')}
@@ -237,7 +362,7 @@ export default function Navbar() {
                   <ShieldAlert size={18} />
                   <div>
                     <div className="text-sm font-medium">Admin Dashboard</div>
-                    <div className="text-xs text-[#c499ff]/60">Manage teams, players & stats</div>
+                    <div className="text-xs text-[#c499ff]/60">Manage teams, players & direct revenue</div>
                   </div>
                 </button>
               )}

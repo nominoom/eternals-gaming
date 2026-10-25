@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import DirectRevenueAccounting from '../components/DirectRevenueAccounting';
+import HostingerAndClerkSettingsModal from '../components/HostingerAndClerkSettingsModal';
 import { 
   ShieldAlert, 
   Trophy, 
@@ -16,7 +18,14 @@ import {
   Zap,
   TrendingUp,
   Sparkles,
-  Play
+  Play,
+  DollarSign,
+  Database,
+  ExternalLink,
+  Clock,
+  ShieldCheck,
+  Award,
+  ArrowRight
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -33,11 +42,13 @@ export default function AdminDashboardPage() {
     setCreators, 
     bracketMatches, 
     updateMatchScore,
-    showToast 
+    showToast,
+    navigate
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState('overview'); // overview | tournaments | teams | players | creators | matches | esports-updates
+  const [activeTab, setActiveTab] = useState('overview'); // overview | revenue | tournaments | teams | players | creators | matches | esports-updates
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Editable live stat inputs
   const [liveStatsForm, setLiveStatsForm] = useState({
@@ -128,9 +139,16 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-white/50 font-mono">
-              Live DB: Synced • Latency: 12ms
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#00FFDF]/10 hover:bg-[#00FFDF]/20 border border-[#00FFDF]/40 text-[#00FFDF] text-xs font-heading font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,255,223,0.2)]"
+            >
+              <Database size={15} />
+              <span>Hostinger & Clerk Config</span>
+            </button>
+            <span className="text-xs text-white/50 font-mono hidden sm:inline">
+              Live DB: Synced
             </span>
           </div>
         </div>
@@ -141,6 +159,7 @@ export default function AdminDashboardPage() {
         <div className="flex overflow-x-auto gap-2 pb-4 border-b border-white/10 scrollbar-none">
           {[
             { id: 'overview', label: 'Overview', icon: Activity },
+            { id: 'revenue', label: 'Direct Apparel Revenue', icon: DollarSign },
             { id: 'tournaments', label: `Tournaments (${tournaments.length})`, icon: Trophy },
             { id: 'teams', label: `Teams (${teams.length})`, icon: Gamepad2 },
             { id: 'players', label: `Players (${players.length})`, icon: Users },
@@ -274,6 +293,129 @@ export default function AdminDashboardPage() {
                   >
                     <Calendar size={15} />
                     <span>Manage Matches</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Operational Portals & Client Features Hub */}
+            <div className="space-y-4 pt-4 border-t border-white/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#00FFDF] mb-1">
+                    System Hub
+                  </div>
+                  <h3 className="text-xl font-heading font-black text-white">
+                    Operations, Referee Time Tracking & Portals
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setShowSettingsModal(true)}
+                  className="inline-flex items-center gap-2 text-xs font-mono text-white/60 hover:text-[#00FFDF] transition-colors"
+                >
+                  <Database size={14} />
+                  <span>Hostinger DB & Clerk Status</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {/* 1. Team Dashboard */}
+                <div className="glass-card p-5 border-[#00FFDF]/20 hover:border-[#00FFDF]/60 transition-all group flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-[#00FFDF]/10 border border-[#00FFDF]/30 flex items-center justify-center text-[#00FFDF] mb-4">
+                      <Users size={20} />
+                    </div>
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-[#00FFDF] mb-1">
+                      Athlete & Creator Portal
+                    </div>
+                    <h4 className="text-base font-heading font-bold text-white mb-2">
+                      Team Dossier & Socials
+                    </h4>
+                    <p className="text-xs text-white/60 font-paragraph mb-4">
+                      Athletes sign in via Clerk, connect Twitch, YouTube, Kick, X, TikTok, Discord, compute aggregate follower metrics into their dossier, and update hardware gear specs.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate('/team-dashboard')}
+                    className="w-full btn-outline-primary py-2.5 text-xs flex items-center justify-center gap-2 group-hover:bg-[#00FFDF] group-hover:text-black transition-all"
+                  >
+                    <span>Open Team Dashboard</span>
+                    <ArrowRight size={13} />
+                  </button>
+                </div>
+
+                {/* 2. Tournament Admin & Referee Desk */}
+                <div className="glass-card p-5 border-[#7F27FF]/20 hover:border-[#7F27FF]/60 transition-all group flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-[#7F27FF]/10 border border-[#7F27FF]/30 flex items-center justify-center text-[#7F27FF] mb-4">
+                      <Clock size={20} />
+                    </div>
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-[#7F27FF] mb-1">
+                      Officials & Arbiter Desk
+                    </div>
+                    <h4 className="text-base font-heading font-bold text-white mb-2">
+                      Referee Shift & Match Desk
+                    </h4>
+                    <p className="text-xs text-white/60 font-paragraph mb-4">
+                      Active duty shift punch-clock timer for tournament referees, squad check-in verification desk, match score adjudication, and dispute resolution tickets.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate('/tournament-admin')}
+                    className="w-full btn-secondary py-2.5 text-xs flex items-center justify-center gap-2"
+                  >
+                    <span>Open Arbiter Desk</span>
+                    <ArrowRight size={13} />
+                  </button>
+                </div>
+
+                {/* 3. Tournaments Player Hub */}
+                <div className="glass-card p-5 border-[#00FFDF]/20 hover:border-[#00FFDF]/60 transition-all group flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-[#00FFDF]/10 border border-[#00FFDF]/30 flex items-center justify-center text-[#00FFDF] mb-4">
+                      <Trophy size={20} />
+                    </div>
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-[#00FFDF] mb-1">
+                      Player Registration Hub
+                    </div>
+                    <h4 className="text-base font-heading font-bold text-white mb-2">
+                      Tournaments Sign-up
+                    </h4>
+                    <p className="text-xs text-white/60 font-paragraph mb-4">
+                      Public competitor portal: browse open championships, submit starting squad rosters and substitutes, check in, and upload match score proof.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate('/tournaments-dashboard')}
+                    className="w-full btn-outline-white py-2.5 text-xs flex items-center justify-center gap-2 group-hover:border-[#00FFDF] group-hover:text-[#00FFDF] transition-all"
+                  >
+                    <span>Open Player Portal</span>
+                    <ArrowRight size={13} />
+                  </button>
+                </div>
+
+                {/* 4. Direct Apparel Accounting */}
+                <div className="glass-card p-5 border-emerald-500/20 hover:border-emerald-500/60 transition-all group flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+                      <DollarSign size={20} />
+                    </div>
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-emerald-400 mb-1">
+                      Direct Revenue Economics
+                    </div>
+                    <h4 className="text-base font-heading font-bold text-white mb-2">
+                      In-House Apparel Margins
+                    </h4>
+                    <p className="text-xs text-white/60 font-paragraph mb-4">
+                      Zero third-party POD cuts (eliminating Printify revenue splits). Direct tracking of retail sales vs raw production costs with live profit simulation.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('revenue')}
+                    className="w-full py-2.5 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 text-xs font-heading font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+                  >
+                    <span>View Revenue Ledger</span>
+                    <ArrowRight size={13} />
                   </button>
                 </div>
               </div>
@@ -531,6 +673,13 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
+        {/* TAB: DIRECT REVENUE ACCOUNTING */}
+        {activeTab === 'revenue' && (
+          <div className="py-8">
+            <DirectRevenueAccounting />
+          </div>
+        )}
+
         {/* Fallbacks for other tabs */}
         {(activeTab === 'teams' || activeTab === 'creators' || activeTab === 'matches') && (
           <div className="py-10">
@@ -542,6 +691,12 @@ export default function AdminDashboardPage() {
         )}
 
       </div>
+
+      {/* Hostinger DB & Clerk Settings Modal */}
+      <HostingerAndClerkSettingsModal 
+        isOpen={showSettingsModal} 
+        onClose={() => setShowSettingsModal(false)} 
+      />
     </div>
   );
 }
